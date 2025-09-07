@@ -15,6 +15,8 @@ class country(data_base.Model):
             'name': self.name
         }
     
+
+
 class tank(data_base.Model):
     __tablename__ = "tanks"
 
@@ -30,7 +32,7 @@ class tank(data_base.Model):
 
     def to_dict(self, on_off_ammo=False):
         info = {
-            "id": self.tank_id,
+            "tank_id": self.tank_id,
             "caliber": self.caliber,
             "model": self.tank_model,
             "crew count": self.crew,
@@ -42,7 +44,9 @@ class tank(data_base.Model):
         if on_off_ammo:
             info['ammunition'] = [ammu.to_dict for ammu in self.ammo]
         return info
-    
+
+
+
 class ammo_type(data_base.Model):
     __tablename__ = 'ammunition_types'
     id = data_base.Column(data_base.Integer, primary_key=True)
@@ -50,14 +54,19 @@ class ammo_type(data_base.Model):
 
     def to_dict(self):
         return {
-            'id': self.id,
+            'ammo_id': self.id,
             'name': self.name
         }
     
+    def update(self, **kwargs):
+        raise ValueError("System ammunition types cannot be modified")
+
+
+
 class tank_ammo(data_base.Model):
     __tablename__ = 'tank_ammunition'
     id = data_base.Column(data_base.Integer, primary_key=True)
-    tank_id = data_base.Column(data_base.Integer, data_base.ForeignKey('tank.id'))
+    tank_id = data_base.Column(data_base.Integer, data_base.ForeignKey('tanks.tank_id'))
     ammunition_id = data_base.Column(data_base.Integer, data_base.ForeignKey('ammunition_types.id'))
     ammunition_type = data_base.relationship('ammo_type', backref='tank_ammunition')
 
