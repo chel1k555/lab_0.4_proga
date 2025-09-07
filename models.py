@@ -75,6 +75,5 @@ class tank_ammo(data_base.Model):
             'id': self.id,
             'tank_id': self.tank_id,
             'ammunition_id': self.ammunition_id,
-            'count': self.count,
             'type_name': self.ammunition_type.name
         }

@@ -30,11 +30,44 @@ def create():
     def get_count():
         try:
             countries = country.query.all()
-            return jsonify([count.to_dict for count in countries]), 200
-        except Exception as exp:
             if countries is None:
-                return jsonify({"error": "countries not found"}), 404
+                return jsonify({"warning": "countries not found or not added"}), 404
             else:
-                return jsonify({"status": 500, "reason": str(exp)}), 500
+                return jsonify([count.to_dict() for count in countries]), 200
+        except Exception as exp:
+            return jsonify({"status": 500, "reason": str(exp)}), 500
     
-    @app.route('/api/countries/')
+    @app.route('/api/countries/<int:id>', methods=['GET'])
+    def get_one_country(id):
+        try:
+            count = country.query.get(id)
+            if count is None:
+                return jsonify({"error": " country not found"}), 404
+            else:
+                return jsonify(count.to_dict()), 200
+        except Exception as exp:
+            return jsonify({"status": 500, "reason": str(exp)}), 500
+        
+    @app.route('/api/tanks', methods=['GET'])
+    def get_all_t():
+        try:
+            tankes = tank.query.all()
+            if tankes is None:
+                return jsonify({"warning": "tanks not found or not added"}), 404
+            else:
+                return jsonify([tankk.to_dict(on_off_ammo=False) for tankk in tankes]), 200
+        except Exception as exp:
+            return jsonify({"status": 500, "reason": str(exp)}), 500
+        
+    @app.route('/api/tanks/<int:tank_id>', methods=['GET'])
+    def get_one_tank(tank_id):
+        try:
+            tankes = tank.query.get(tank_id)
+            if tankes is None:
+                return jsonify({"warning": "tanks not found or not added"}), 404
+            else:
+                return jsonify([tankes.to_dict(on_off_ammo=True)]), 200
+        except Exception as exp:
+            return jsonify({"status": 500, "reason": str(exp)}), 500
+        
+    
