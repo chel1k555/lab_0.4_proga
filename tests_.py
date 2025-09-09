@@ -90,6 +90,7 @@ def test_delete_country():
     stokovoe_base()
     
     with app.test_client() as client:
+        response = client.delete('/api/tanks/1')
         response = client.get('/api/countries/1')
         assert response.status_code == 200
         
@@ -123,12 +124,12 @@ def test_get_tanks():
         assert response.status_code == 200
         data = json.loads(response.data)
         assert len(data) == 1
-        assert data['model'] == "Т-90М (Прорыв)"
-        assert data['caliber'] == 125
-        assert data['crew count'] == 3
-        assert data['shell drum'] == 22
-        assert data['speed forward'] == 70
-        assert data['speed back'] == -4
+        assert data[0]['model'] == "Т-90М (Прорыв)"
+        assert data[0]['caliber'] == 125
+        assert data[0]['crew count'] == 3
+        assert data[0]['shell drum'] == 22
+        assert data[0]['speed forward'] == 70
+        assert data[0]['speed back'] == -4
     
     clean()
 
@@ -165,7 +166,7 @@ def test_create_tank():
             'baraban': 42,
             'country_id': 2
         }
-        response = client.post('/api/tanks/', json=new_tank, content_type='application/json')
+        response = client.post('/api/tanks', json=new_tank, content_type='application/json')
         assert response.status_code == 200
         data = json.loads(response.data)
         assert data[0]['model'] == "M1A4 Abrams"
@@ -185,7 +186,7 @@ def test_update_tank():
     stokovoe_base()
     
     with app.test_client() as client:
-        update_data = {'model': "Т-80БВМ", 'forward_speed': 75, 'backward_speed': -14}
+        update_data = {'tank_model': "Т-80БВМ", 'forward_speed': 75, 'backward_speed': -14}
         response = client.patch('/api/tanks/1', json=update_data, content_type='application/json')
         assert response.status_code == 200
         data = json.loads(response.data)
