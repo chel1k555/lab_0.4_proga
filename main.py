@@ -243,6 +243,7 @@ def create():
     
     return app
 
+app = create()
+
 if __name__ == '__main__':
-    app = create()
     app.run(debug=False)
