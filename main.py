@@ -40,7 +40,7 @@ def create():
     @app.route('/api/countries/<int:id>', methods=['GET'])
     def get_one_country(id):
         try:
-            count = country.query.get(id)
+            count = data_base.session.get(id)
             if count is None:
                 return jsonify({"error": " country not found"}), 404
             else:
@@ -67,7 +67,7 @@ def create():
     @app.route('/api/tanks/<int:tank_id>', methods=['GET'])
     def get_one_tank(tank_id):
         try:
-            tankes = tank.query.get(tank_id)
+            tankes = data_base.session.get(tank_id)
             if tankes is None:
                 return jsonify({"warning": "tanks not found or not added"}), 404
             else:
@@ -140,7 +140,7 @@ def create():
             
             data_base.session.add(new_tank)
             data_base.session.commit()
-            return jsonify(new_tank.to_dict()), 200
+            return jsonify([new_tank.to_dict()]), 200
         except Exception as e:
             data_base.session.rollback()
             return jsonify({"status": 500, "reason": str(e)}), 500
@@ -151,7 +151,7 @@ def create():
     @app.route('/api/countries/<int:id>', methods=['PATCH'])
     def update_country(id):
         try:
-            count = country.query.get(id)
+            count = data_base.session.get(id)
             if count is None:
                 return jsonify({"error": "country not found"}), 404
             
@@ -171,7 +171,7 @@ def create():
     @app.route('/api/tanks/<int:tank_id>', methods=['PATCH'])
     def update_tank(tank_id):
         try:
-            tank_obj = tank.query.get(tank_id)
+            tank_obj = data_base.session.get(tank_id)
             if tank_obj is None:
                 return jsonify({"error": "tank not found"}), 404
             
@@ -205,7 +205,7 @@ def create():
     @app.route('/api/countries/<int:id>', methods=['DELETE'])
     def delete_country(id):
         try:
-            count = country.query.get(id)
+            count = data_base.session.get(id)
 
             if count is None:
                 return jsonify({"error": "country not found"}), 404
@@ -223,7 +223,7 @@ def create():
     @app.route('/api/tanks/<int:tank_id>', methods=['DELETE'])
     def delete_tank(tank_id):
         try:
-            tankes = tank.query.get(tank_id)
+            tankes = data_base.session.get(tank_id)
             
             if tankes is None:
                 return jsonify({"error": "tank not found"}), 404
