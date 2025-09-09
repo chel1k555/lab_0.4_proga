@@ -21,8 +21,8 @@ class tank(data_base.Model):
     __tablename__ = "tanks"
 
     tank_id = data_base.Column(data_base.Integer, primary_key=True)
-    caliber = data_base.Column(data_base.Integer)
     tank_model = data_base.Column(data_base.String(20), nullable=False)
+    caliber = data_base.Column(data_base.Integer)
     crew = data_base.Column(data_base.Integer)
     forward_speed = data_base.Column(data_base.Integer)
     backward_speed = data_base.Column(data_base.Integer)
@@ -33,8 +33,8 @@ class tank(data_base.Model):
     def to_dict(self, on_off_ammo=False):
         info = {
             "tank_id": self.tank_id,
-            "caliber": self.caliber,
             "model": self.tank_model,
+            "caliber": self.caliber,
             "crew count": self.crew,
             "shell drum": self.baraban,
             "speed forward": self.forward_speed,
@@ -42,7 +42,7 @@ class tank(data_base.Model):
             "country id": self.country_id
         }
         if on_off_ammo:
-            info['ammunition'] = [ammu.to_dict for ammu in self.ammo]
+            info['ammunition'] = [ammu.to_dict() for ammu in self.ammo]
         return info
 
 
@@ -58,9 +58,6 @@ class ammo_type(data_base.Model):
             'name': self.name
         }
     
-    def update(self, **kwargs):
-        raise ValueError("System ammunition types cannot be modified")
-
 
 
 class tank_ammo(data_base.Model):
@@ -72,7 +69,7 @@ class tank_ammo(data_base.Model):
 
     def to_dict(self):
         return {
-            'id': self.id,
+            'tank_ammo_id': self.id,
             'tank_id': self.tank_id,
             'ammunition_id': self.ammunition_id,
             'type_name': self.ammunition_type.name
